@@ -13,12 +13,15 @@
   pre {
     background-color: #E3E3E3;
     font-family: "Lucida Console", Monaco, "Courier New", monospace;
-    font-size: 14pt
+    font-size: 14pt;
+    overflow: auto;
   }
 
-  #jslt, #input {
-    font-family: "Lucida Console", Monaco, "Courier New", monospace;
-    font-size: 14pt
+  #jslt,
+  #input {
+    font-size: 14pt;
+    width: 60%;
+    height: 40%;
   }
 
   body {
@@ -33,13 +36,13 @@ function send() {
   var out = document.getElementById('result');
   out.firstChild.nodeValue = '...wait...';
 
-  var input = document.getElementById('input').value
-  var jslt = document.getElementById('jslt').value
+  var input = inputEditor.getValue();
+  var jslt = jsltEditor.getValue();
   var data = {"json" : input, "jslt" : jslt }
 
   var http = new XMLHttpRequest();
   var url = "jslt-demo";
-  //var url = "http://localhost:9999/jslt";
+  var url = "http://localhost:9999/jslt";
   http.open("POST", url, true);
   http.setRequestHeader("Content-type", "application/json");
 
@@ -74,8 +77,7 @@ Please <a href="https://github.com/schibsted/jslt/issues"
 
 <h2>JSLT</h2>
 
-<textarea id="jslt" name="jslt" cols=80 rows=20>
-let idparts = split(.id, "-")
+<div id="jslt">let idparts = split(.id, "-")
 let xxx = [for ($idparts) "x" * size(.)]
 
 {
@@ -83,12 +85,11 @@ let xxx = [for ($idparts) "x" * size(.)]
   "type" : "Anonymized-View",
   * : .
 }
-</textarea>
+</div>
 
 <h2>Input</h2>
 
-<textarea id="input" name="input" cols=80 rows=20>
-{
+<div id="input">{
   "schema" : "http://schemas.schibsted.io/thing/pulse-simple.json#1.json",
   "id" : "w23q7ca1-8729-24923-922b-1c0517ddffjf1",
   "published" : "2017-05-04T09:13:29+02:00",
@@ -96,4 +97,19 @@ let xxx = [for ($idparts) "x" * size(.)]
   "environmentId" : "urn:schibsted.com:environment:uuid",
   "url" : "http://www.aftenposten.no/"
 }
-</textarea>
+</div>
+
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"
+  integrity="sha512-GZ1RIgZaSc8rnco/8CXfRdCpDxRCphenIiZ2ztLy3XQfCbQUSCuk8IudvNHxkRA3oUg6q0qejgN/qqyG1duv5Q=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script>
+  var inputEditor = ace.edit("input");
+  inputEditor.setTheme("ace/theme/monokai");
+  inputEditor.session.setMode("ace/mode/json");
+
+  var jsltEditor = ace.edit("jslt");
+  jsltEditor.setTheme("ace/theme/monokai");
+</script>
